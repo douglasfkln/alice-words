@@ -5,16 +5,32 @@ import Style from '../style/Style'
 
 export default class Results extends React.Component {
 
-    reset = () => {
-        alert("Errroooooo")
+    state = {
+        result: ''
     }
-
+    componentDidMount() {
+        this.props.getData().then((data) => {
+            palavrasStorage = data.words
+            let resultado = '';
+            resultado = palavrasStorage[0] + ' - ' + this.props.state.results.palavra1 + '\n'
+            resultado += palavrasStorage[1] + ' - ' + this.props.state.results.palavra2 + '\n'
+            resultado += palavrasStorage[2] + ' - ' + this.props.state.results.palavra3
+            this.setState({
+                result: resultado
+            });
+        })
+    }
+    reset = () => {
+        this.props.reset()
+    }
     render() {
         return (
             <View>
-                <Text style={Style.readMorePanelText}>Resultado</Text>
+                <Text style={Style.readMorePanelText}>
+                    {this.state.result}
+                </Text>
                 <Button
-                    onClick={this.reset}
+                    onPress={this.reset}
                     title="Recomeçar"
                 />
             </View>

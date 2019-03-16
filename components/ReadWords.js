@@ -5,8 +5,10 @@ import Style from '../style/Style'
 export default class ReadWords extends React.Component {
 
     changeState = () => {
-        // TODO: criar o método changeState
-        alert("Olá")
+        this.props.changeState({
+            showReadWords: false,
+            showTimeCounter: true
+        })
     }
 
     render() {
@@ -15,9 +17,9 @@ export default class ReadWords extends React.Component {
                 <Text style={Style.textCenter}>
                     Memorize as palavras abaixo:
                 </Text>
-                <Text style={Style.readMorePanelText}>Palavra 1</Text>
-                <Text style={Style.readMorePanelText}>Palavra 2</Text>
-                <Text style={Style.readMorePanelText}>Palavra 3</Text>
+                <Text style={Style.readMorePanelText}>{this.props.state.palavra1}</Text>
+                <Text style={Style.readMorePanelText}>{this.props.state.palavra2}</Text>
+                <Text style={Style.readMorePanelText}>{this.props.state.palavra3}</Text>
                 <Button
                     onPress={this.changeState}
                     title="Memorizei!"

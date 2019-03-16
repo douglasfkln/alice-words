@@ -14,7 +14,7 @@ export default class App extends React.Component {
 
   // Tem que ser state
   state = {
-    minutesToWait: 0, // tempo ate o usuario informar as palavras
+    minutesToWait: 1, // tempo ate o usuario informar as palavras
     minutesToShow: 0, // representa quanto tempo falta para exibir as palavras
     showLogo: true,
     showLoader: true,
@@ -41,13 +41,14 @@ export default class App extends React.Component {
   getData = async () => {
     try {
       let value = await AsyncStorage.getItem('ALICEWORDS');
-      return (value != null) ? JSON.parse(value) : false;
+      return (value !== null) ? JSON.parse(value) : false;
     } catch (error) {
       console.error("Erro get Storage", error);
     }
   }
 
   componentDidMount() {
+    //AsyncStorage.removeItem("ALICEWORDS");
     this.getData().then((data) => {
       if (data === false) {
         // significa que ainda nao temos AsyncStorage
@@ -63,7 +64,6 @@ export default class App extends React.Component {
         if (actualDate < showDate) {
           // usuario ainda deve aguardar
           this.changeState({
-            minutesToShow: diffMin,
             showLoader: false,
             showTimeCounter: true
           });
@@ -78,9 +78,43 @@ export default class App extends React.Component {
     })
   }
 
+  loadWords = async () => {
+    fetch('https://alice-words-v1.herokuapp.com/get-words')
+      .then((response) => response.json())
+      .then((words) => {
+        // armazena as palavras no localStorage
+        this.storeData({
+          generatedAt: new Date,
+          showAt: this.getEndDate(),
+          words
+        });
+        // ajusta a visibilidade dos elementos
+        this.changeState({
+          showLoader: false,
+          showReadWords: true,
+          showTimeCounter: false,
+          showInputWords: false,
+          showResults: false,
+          palavra1: words[0],
+          palavra2: words[1],
+          palavra3: words[2]
+        })
+      })
+  }
+
+  getEndDate = () => {
+    dt = new Date
+    dt.setMinutes(dt.getMinutes() + this.state.minutesToWait)
+    return dt
+  }
+  reset = () => {
+    AsyncStorage.removeItem('ALICEWORDS').then(() => {
+      this.componentDidMount()
+    })
+  }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} >
         <If test={this.state.showLogo}>
           <Logo />
         </If>
@@ -88,16 +122,24 @@ export default class App extends React.Component {
           <Loader />
         </If>
         <If test={this.state.showReadWords}>
-          <ReadWords />
+          <ReadWords changeState={this.changeState} state={this.state} />
         </If>
         <If test={this.state.showTimeCounter}>
-          <TimeCounter />
+          <TimeCounter
+            getData={this.getData}
+            changeState={this.changeState}
+          />
         </If>
         <If test={this.state.showInputWords}>
-          <InputWords />
+          <InputWords changeState={this.changeState} />
         </If>
         <If test={this.state.showResults}>
-          <Results />
+          <Results
+            changeState={this.changeState}
+            state={this.state}
+            getData={this.getData}
+            reset={this.reset}
+          />
         </If>
       </View>
     );
