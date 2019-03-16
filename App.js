@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import Logo from './components/Logo';
 import Loader from './components/Loader';
+import ReadWords from './components/ReadWords';
 
 export default class App extends React.Component {
   render() {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <Logo />
         <Loader />
+        <ReadWords />
       </View>
     );
   }
