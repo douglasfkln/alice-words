@@ -47,6 +47,37 @@ export default class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.getData().then((data) => {
+      if (data === false) {
+        // significa que ainda nao temos AsyncStorage
+        this.loadWords();
+      } else {
+        // temos AsyncStorage, vamos verificar
+        // se o usuário deve informar as palavras
+        // ou aguardar mais algum tempo
+        // pega a data atual
+        let actualDate = new Date;
+        // data em que o usuario pode relembrar as palavras
+        let showDate = new Date(data.showAt)
+        if (actualDate < showDate) {
+          // usuario ainda deve aguardar
+          this.changeState({
+            minutesToShow: diffMin,
+            showLoader: false,
+            showTimeCounter: true
+          });
+        } else {
+          // usuario deve informar as palavras
+          this.changeState({
+            showLoader: false,
+            showInputWords: true
+          })
+        }
+      }
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
