@@ -1,11 +1,12 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native'
-import Style from '../style/Padrao'
+import Style from '../style/Style'
 
 export default class ReadWords extends React.Component {
 
     changeState = () => {
         // TODO: criar o método changeState
+        alert("Olá")
     }
 
     render() {

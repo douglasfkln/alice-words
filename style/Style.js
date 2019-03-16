@@ -24,12 +24,18 @@ export default StyleSheet.create({
         marginVertical: 12,
         overflow: 'hidden',
         padding: 18,
-        textAlign: 'center',
+        textAlign: 'center'
     },
     waitText: {
         fontSize: 20,
         marginVertical: 12,
         marginHorizontal: 20,
         textAlign: 'center'
+    },
+    textInput: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginVertical: 10
     }
 })
